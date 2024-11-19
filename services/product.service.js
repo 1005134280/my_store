@@ -11,7 +11,7 @@ class ProductService {
   }
 
   generate() {
-    const limit = 100;
+    const limit = 10;
     for (let i = 0; i < limit; i++) {
       this.products.push({
         id: faker.string.uuid(),
