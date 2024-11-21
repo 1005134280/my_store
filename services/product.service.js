@@ -3,11 +3,21 @@ const e = require('express');
 const boom = require('@hapi/boom');
 const { tr } = require('faker/lib/locales');
 
+const pool = require('../libs/postgres.pool');
+
 
 class ProductService {
   constructor() {
     this.products = [];
     this.generate();
+    this.pool = pool;
+    this.pool.on('error', (err) => console.error(err));
+  }
+
+  async findProducts() {
+    const query = 'SELECT * FROM tasks';
+    const rta = await this.pool.query(query);
+    return rta.rows;
   }
 
   generate() {
@@ -31,13 +41,7 @@ class ProductService {
     return newProduct;
   }
 
-  findProducts() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.products);
-      }, 5000);
-    });  
-  }
+
 
   async findOneProduct(id) {
     const product = this.products.find(item => item.id === id);

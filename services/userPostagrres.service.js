@@ -3,8 +3,10 @@ const e = require('express');
 const boom = require('@hapi/boom');
 const { tr } = require('faker/lib/locales');
 
+const getConnection = ('.../lib/postgres');
 
-const getConnection = require('../libs/postgres');
+
+
 class UserService { 
     constructor() {
         this.users = [];
@@ -28,9 +30,9 @@ class UserService {
 
 
     async findUsers() {
-        const cliente = await getConnection();
-        const rta = await cliente.query('SELECT * FROM tasks')
-        return rta.rows;
+       const cliente = await getConnection();
+       const rta = await cliente.query('SELECT * FROM tasks')
+       return rta.rows;
     }
 
     async findOneUser(id) {
