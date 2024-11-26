@@ -3,23 +3,23 @@ const e = require('express');
 const boom = require('@hapi/boom');
 const { tr } = require('faker/lib/locales');
 
-const pool = require('../libs/postgres.pool');
+const sequelize = require('../libs/sequelize');
+
 
 
 class ProductService {
   constructor() {
     this.products = [];
     this.generate();
-    this.pool = pool;
-    this.pool.on('error', (err) => console.error(err));
+   
   }
 
   async findProducts() {
     const query = 'SELECT * FROM tasks';
-    const rta = await this.pool.query(query);
-    return rta.rows;
+    const [data, metadata] = await sequelize.query(query); // Desestructuración
+    return data; // Solo devolver los datos, no la metadata
   }
-
+  
   generate() {
     const limit = 10;
     for (let i = 0; i < limit; i++) {
