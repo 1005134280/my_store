@@ -3,76 +3,59 @@ const e = require('express');
 const boom = require('@hapi/boom');
 const { tr } = require('faker/lib/locales');
 
+const { models } = require('../libs/sequelize');
+const { Model } = require('sequelize');
 
-const getConnection = require('../libs/postgres');
-class UserService { 
-    constructor() {
-        this.users = [];
-        this.generate();
-    }   
-    generate() {
-        const limit = 10;            
-        for (let i = 0; i < limit; i++) {
-            this.users.push({
-                id: faker.string.uuid(),
-                name: faker.name.firstName(),
-                lastName: faker.name.lastName(),
-                email: faker.internet.email(),
-                password: faker.internet.password(),
-                phone: faker.phone.number(),
-                address: faker.address.streetAddress(),
-                city: faker.address.city(),
-            });
-        }
+class UserService {
+  constructor() {
+    this.users = [];
+  //  this.generate();
+  }/*
+  generate() {
+    const limit = 10;
+    for (let i = 0; i < limit; i++) {
+      this.users.push({
+        id: faker.string.uuid(),
+        name: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        phone: faker.phone.number(),
+        address: faker.address.streetAddress(),
+        city: faker.address.city(),
+      });
     }
+  }*/
 
+  async findUsers() {
+    const rta = await models.User.findAll();
+    return rta;
+  }
 
-    async findUsers() {
-        const cliente = await getConnection();
-        const rta = await cliente.query('SELECT * FROM tasks')
-        return rta.rows;
+  async findOneUser(id) {
+    const user = await models.User.findByPk(id);
+    if(!user){
+        throw boom.notFound('usr not found');
     }
+    return user;
+  }
 
-    async findOneUser(id) {
-        return this.users.find(item => item.id === id);
-       
-    }
+  async createUser(data) {
+    const newUser = await models.User.create(data);
+    return newUser;
+  }
 
+  async updateUser(id, changes) {
+    const user = await this.findOneUser(id);
+    const rta = await user.update(changes);
+    return rta;
+  }
 
-
-    async createUser(data) {
-        const newUser = {
-            id: faker.string.uuid(),
-            ...data,
-        };
-        this.users.push(newUser);
-        return newUser;
-    }
-
-    async updateUser(id, changes) {
-        const index = this.users.findIndex((item) => item.id === id);
-        if (index === -1) {
-            throw boom.notFound('User not found');
-        }
-        const user = this.users[index];
-        this.users[index] = {
-            ...user,
-            ...changes,
-        };
-        return this.users[index];
-    }
-
-    async deleteUser(id) {
-        const index = this.users.findIndex((item) => item.id === id);
-        if (index === -1) {
-            throw boom.notFound('User not found');
-        }
-        this.users.splice(index, 1);
-        return { id };
-    }
-
+  async deleteUser(id) {
+    const user = await this.findOneUser(id);
+  await user.destroy();
+  return {id}
+  }
 }
-
-
 
 module.exports = UserService;
