@@ -9,23 +9,8 @@ const { Model } = require('sequelize');
 class UserService {
   constructor() {
     this.users = [];
-  //  this.generate();
-  }/*
-  generate() {
-    const limit = 10;
-    for (let i = 0; i < limit; i++) {
-      this.users.push({
-        id: faker.string.uuid(),
-        name: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        phone: faker.phone.number(),
-        address: faker.address.streetAddress(),
-        city: faker.address.city(),
-      });
-    }
-  }*/
+    //  this.generate();
+  }
 
   async findUsers() {
     const rta = await models.User.findAll();
@@ -34,8 +19,8 @@ class UserService {
 
   async findOneUser(id) {
     const user = await models.User.findByPk(id);
-    if(!user){
-        throw boom.notFound('usr not found');
+    if (!user) {
+      throw boom.notFound('usr not found');
     }
     return user;
   }
@@ -53,8 +38,8 @@ class UserService {
 
   async deleteUser(id) {
     const user = await this.findOneUser(id);
-  await user.destroy();
-  return {id}
+    await user.destroy();
+    return { id };
   }
 }
 
