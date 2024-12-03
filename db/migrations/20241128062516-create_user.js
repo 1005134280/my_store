@@ -1,13 +1,13 @@
 'use strict';
 
-const {userSchema, USER_TABLE } = require('./../models/user.model')
+const {USER_TABLE, UserSchema } = require('./../models/user.model')
 
 
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface) {
-   await queryInterface.createTable(USER_TABLE, userSchema);
+   await queryInterface.createTable(USER_TABLE, UserSchema);
    // ESTOS LOS LOS CAMBIOS 
 
   },
@@ -15,6 +15,6 @@ module.exports = {
   async down (queryInterface, Sequelize) {
     // AQUI SE REVIERTE LOS CAMBIOS
 
-    await queryInterface.drop(USER_TABLE);
+    await queryInterface.dropTable(USER_TABLE);
   }
 };

@@ -1,5 +1,8 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
+const { USER_TABLE } = require('./user.model');
+const Unique = require('faker/lib/unique');
+
 const CUSTOMER_TABLE = 'customers';
 
 const CustomerSchema = {
@@ -28,18 +31,31 @@ const CustomerSchema = {
     field: 'create_at',
     defaultValue: Sequelize.NOW,
   },
+  userId:{
+    allowNull:false,
+    field: 'user_id',
+    type: DataTypes.INTEGER,
+    unique: true,
+    references: {
+      model: USER_TABLE,
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
+  }
 };
 
 class Customer extends Model {
-  static associate() {
-    // Define asociaciones aquí
+  static associate(models) {
+    this.belongsTo(models.User, { as: 'user' });
   }
+
 
   static config(sequelize) {
     return {
       sequelize,
       tableName: CUSTOMER_TABLE,
-      modelName: 'customers',
+      modelName: 'Customer',
       timestamps: false,
     };
   }

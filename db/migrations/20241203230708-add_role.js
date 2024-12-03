@@ -1,5 +1,6 @@
 'use strict';
 
+
 const {UserSchema, USER_TABLE } = require('./../models/user.model')
 
 /** @type {import('sequelize-cli').Migration} */
@@ -12,3 +13,4 @@ module.exports = {
    await queryInterface.renameColumn(USER_TABLE, 'role')
   }
 };
+
