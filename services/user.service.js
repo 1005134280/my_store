@@ -26,6 +26,12 @@ class UserService {
   }
 
   async createUser(data) {
+    const existingUser = await models.User.findOne({
+      where: { email: data.email },
+    });
+    if (existingUser) {
+      throw new Error('El correo ya está registrado'); // Lanzar un error si el correo existe
+    }
     const newUser = await models.User.create(data);
     return newUser;
   }

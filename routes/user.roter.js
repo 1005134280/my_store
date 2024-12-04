@@ -34,9 +34,17 @@ router.post(
   '/',
   validatorHandler(createUserSchema, 'body'),
   async (req, res) => {
-    const body = req.body;
-    const newUser = await service.createUser(body);
-    res.status(201).json(newUser);
+    try {
+      const body = req.body;
+      const newUser = await service.createUser(body);
+      res.status(201).json(newUser);
+    } catch (error) {
+      if (error.message === 'El correo ya está registrado') {
+        res.status(400).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Error interno del servidor' });
+      }
+    }
   },
 );
 
@@ -67,6 +75,6 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  },  
-)
+  },
+);
 module.exports = router;
