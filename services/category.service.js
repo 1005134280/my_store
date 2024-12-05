@@ -1,74 +1,45 @@
-const { faker } = require('@faker-js/faker');
-const e = require('express');
 const boom = require('@hapi/boom');
-const { tr } = require('faker/lib/locales');
+
+const { models } = require('../libs/sequelize');
 
 class CategoryService {
-  constructor() {
-    this.categories = [];
-    this.generate();
-  }
-
-  async generate() {
-    const limit = 10;
-    for (let i = 0; i < limit; i++) {
-      this.categories.push({
-        id: faker.string.uuid(),
-        name: faker.commerce.department(),
-      });
-    }
-  }
-
-  async createCategory(data) {
-    const newCategory = {
-      id: faker.string.uuid(),
-      ...data,
-    };
-    this.categories.push(newCategory);
-    return newCategory;
-  }
   async findCategories() {
-    return this.categories;
+    const categories = await models.Category.findAll();
+    return categories;
   }
-  async findOneCategory(id) {
-    const category = this.categories.find((item) => item.id === id);
 
+  async findOneCategory(id) {
+    const category = await models.Category.findByPk(id, {
+      include: ['products'],
+    });
     if (!category) {
       throw boom.notFound('category not found');
-    }
-    if (category.isBlock) {
-      throw boom.conflict('category is block');
     }
     return category;
   }
 
-  async updateCategory(id, changes) {
-    const index = this.categories.findIndex((item) => item.id === id);
-
-    if (index === -1) {
-      throw boom.notFound('Category not found');
-    }
-
-    const category = this.categories[index];
-
-    this.categories[index] = {
-      ...category,
-      ...changes,
-    };
-
-    return this.categories[index];
+  async createCategory(data) {
+    const newCategory = await models.Category.create(data);
+    return newCategory;
   }
 
+  async updateCategory(id, change) {
+    const category = await this.findOneCategory(id);
+    const rta = await models.category.update(change);
+    return rta;
+  }
 
   async deleteCategory(id) {
-    const index = this.categories.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw boom.notFound('Category not found');
+    const category = await this.findOneCategory(id);
+    if (!category) {
+      throw new Error('Category not found');
     }
-    this.categories.splice(index, 1);
+    await models.Category.destroy({
+      where: { id }, // Proporcionar el ID como condición de filtro
+    });
+
     return { id };
   }
 }
-
 
 module.exports = CategoryService;

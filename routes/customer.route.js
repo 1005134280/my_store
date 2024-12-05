@@ -40,9 +40,17 @@ router.post(
   '/',
   validatorHandler(createCustomerSchema, 'body'),
   async (req, res) => {
+    try {
     const body = req.body;
     const newCustomer = await service.create(body);
-    res.status(201).json(newCustomer);
+    res.status(201).json(newCustomer);     
+    } catch (error) {
+      if (error.message === 'El id ya está registrado') {
+        res.status(400).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Error interno del servidor' });
+      }
+    }
   },
 );
 
