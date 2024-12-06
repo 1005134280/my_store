@@ -1,6 +1,6 @@
 'use strict';
 
-const { ORDER_PRODUCT_TABLE, OrderProductSchema } = require('../models/order-product');  // Corrected the path
+const { ORDER_PRODUCT_TABLE, OrderProductSchema } = require('../db/models/order-product');  // Corrected the path
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
