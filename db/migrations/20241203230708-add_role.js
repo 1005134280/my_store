@@ -10,7 +10,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-   await queryInterface.renameColumn(USER_TABLE, 'role')
+   await queryInterface.removeColumn(USER_TABLE, 'role')
   }
 };
 
