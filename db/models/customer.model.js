@@ -2,7 +2,7 @@ const { Model, DataTypes, Sequelize } = require('sequelize');
 
 const { USER_TABLE } = require('./user.model');
 
-const Unique = require('faker/lib/unique');
+
 
 const CUSTOMER_TABLE = 'customers';
 
@@ -29,7 +29,7 @@ const CustomerSchema = {
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,
-    field: 'create_at',
+    field: 'created_at',
     defaultValue: Sequelize.NOW,
   },
   userId:{

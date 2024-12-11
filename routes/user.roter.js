@@ -39,11 +39,12 @@ router.post(
       const newUser = await service.createUser(body);
       res.status(201).json(newUser);
     } catch (error) {
-      if (error.message === 'El correo ya está registrado') {
+      /*if (error.message === 'El correo ya está registrado') {
         res.status(400).json({ error: error.message });
       } else {
         res.status(500).json({ error: 'Error interno del servidor' });
-      }
+      }*/
+      next(error);
     }
   },
 );

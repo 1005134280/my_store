@@ -17,9 +17,9 @@ const createCustomerSchema = Joi.object({
   lastName: lastName.required(),
   phone: phone.required(),
   user: Joi.object({
-    email: email.required(),
-    password: password.required()
-  })
+  email: email.required(),
+  password: password.required(),
+  }),
 });
 
 const updateCustomerSchema = Joi.object({

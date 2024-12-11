@@ -4,6 +4,7 @@ const cors = require('cors');
 const routerApi = require('./routes');
 const { logErrors, errorHandler, boomErrorHandler} = require('./middlewares/error.handlder')
 const boom = require('@hapi/boom');
+const { checkApiKey }= require('./middlewares/auth.handler')
 
 const app = express();
 const port = 3001;
@@ -18,12 +19,13 @@ origin = (origin, callback) => {
   }
 }
 app.use(cors());
+require('./utils/auth');
 
 app.get('/', (req, res) => {
   res.send('Si me estoy ejecutando');
 });
 
-app.get('/nueva-rutas', (req, res) => {
+app.get('/nueva-rutas', checkApiKey, (req, res) => {
   res.send('Hola soy una nueva ruta!');
 });
 
