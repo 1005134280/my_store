@@ -9,42 +9,44 @@ const OrderSchema = {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
-    type: DataTypes.INTEGER,
+    type: Sequelize.DataTypes.INTEGER
   },
   customerId: {
     field: 'customer_id',
     allowNull: false,
-    type: DataTypes.INTEGER,
+    type: Sequelize.DataTypes.INTEGER,
     references: {
       model: CUSTOMER_TABLE,
-      key: 'id',
+      key: 'id'
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL',
+    onDelete: 'SET NULL'
   },
   createdAt: {
     allowNull: false,
-    type: DataTypes.DATE,
+    type: Sequelize.DataTypes.DATE,
     field: 'created_at',
     defaultValue: Sequelize.NOW,
   },
   total: {
     type: DataTypes.VIRTUAL,
     get() {
-      if (this.items.length > 0) {
+      if (this.items && this.items.length > 0) {  // Verificamos si 'items' existe
         return this.items.reduce((total, item) => {
           return total + item.price * item.OrderProduct.amount;
         }, 0);
       }
-      return 0;
+      return 0;  // Si no hay items, el total será 0
     },
   },
+  
 };
 
 class Order extends Model {
   static associate(models) {
     this.belongsTo(models.Customer, {
       as: 'customer',
+      foreignKey: 'customerId', 
     });
     this.belongsToMany(models.Product, {
       as: 'items',

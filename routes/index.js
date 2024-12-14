@@ -5,6 +5,7 @@ const cotegoryRouter = require('./cotegory.route');
 const customerRouter = require('./customer.route');
 const orderRouter = require('./order.route');
 const authRouter = require('./auth.router');
+const profileRouter = require('./profile.router');
 
 
 function routerApi(app) {
@@ -16,6 +17,7 @@ function routerApi(app) {
     roter.use('/customer', customerRouter);
     roter.use('/order', orderRouter);
     roter.use('/auth', authRouter);
+    roter.use('/profile', profileRouter);
 }
 
 module.exports = routerApi;

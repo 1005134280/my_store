@@ -33,7 +33,7 @@ router.get(
 router.post(
   '/',
   validatorHandler(createOrderSchema, 'body'),
-  async (req, res) => {
+  async (req, res,next) => {
     try {
       const body = req.body;
       const newOrder = await service.create(body);
@@ -76,7 +76,7 @@ router.delete(
 router.post(
   '/add-item',
   validatorHandler(addItemSchema, 'body'),
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const body = req.body;
       const newItem = await service.addItem(body);

@@ -1,28 +1,19 @@
 const express = require('express');
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
+const OrderService = require('../services/order.service');
 
-const { config } = require('../config/config')
 
 const router = express.Router();
+const service = new OrderService();
 
-router.post(
-  '/login',
-  passport.authenticate('local', { session: false }), // Aquí se usa 'local' en vez de '/local'
+router.get('/my-orders',
+  passport.authenticate('jwt', { session: false }), // Aquí se usa 'local' en vez de '/local'
   async (req, res, next) => {
     try {
-      const user = req.user;
-
-      const payload = {
-        sub: user.is,
-        role: user.role,
-      };
-
-      const token = jwt.sign(payload, config.jwtSecret);
-      res.json({
-        user,
-        token,
-      });
+        const user = req.user;
+        console.log(user);  // Verifica que el valor de user esté correctamente seteado
+        const orders = await service.findByUser(user.sub);
+        res.json(orders);
     } catch (error) {
       next(error);
     }

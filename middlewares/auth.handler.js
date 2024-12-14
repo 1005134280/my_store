@@ -1,7 +1,7 @@
 const boom = require('@hapi/boom');
 
 const { config } = require('../config/config');
-const { ne } = require('faker/lib/locales');
+
 
 function checkApiKey(req, res, next) {
   const apiKey = req.headers['api'];

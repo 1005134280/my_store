@@ -14,7 +14,7 @@ router.post(
       const user = req.user;
 
       const payload = {
-        sub: user.is,
+        sub: user.id,
         role: user.role,
       };
 
